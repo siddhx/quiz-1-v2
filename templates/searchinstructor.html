@@ -1,0 +1,31 @@
+<!-- # Siddharth Agarwal
+# 1001577570
+# CSE 6331
+# Assignment 1
+# Design considerations -
+# references:
+# -https://stackoverflow.com/questions/33580143/flask-show-flash-messages-in-alertbox -->
+<html>
+<body>
+<!-- {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+      var messages = {{ messages | safe }};
+      for (var i=0; i<messages.length; i++) {
+        alert(messages[i]);
+      }
+    </script>
+  {% endif %}
+{% endwith %} -->
+<h1>Siddharth Agarwal</h1>
+<h1>7570</h1>
+<!-- <form action = " https://7570assignment1.mybluemix.net/uploadpicbyname" method = "POST"
+   enctype = "multipart/form-data"> -->
+<form action = "http://127.0.0.1:5000/search/instructor" method = "POST"
+   enctype = "multipart/form-data">
+   enter course number
+   <input type = "text" name = "course" />
+   <input type = "submit"/>
+</form>
+</body>
+</html>
