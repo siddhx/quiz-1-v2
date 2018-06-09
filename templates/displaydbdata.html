@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html>
 <body>
+  <!-- <form action = "http://quiz1.mybluemix.net/api/createcsv" method = "POST"
+      enctype = "multipart/form-data">
+      <input type = "file" name = "csv" />
+      <input type = "submit"/> -->
+  <form action = "http://127.0.0.1:5000/api/createcsv" method = "POST"
+     enctype = "multipart/form-data">
+     <input type = "file" name = "csv" />
+     <input type = "submit"/>
 
-  <h1>Show the user listing here</h1>
+  <!-- <h1>Show the user listing here</h1> -->
   <h1>size of data {{size}} rows </h1>
 <table>
-  {% for elt in students %}
+  {% for elt in data %}
       <p>{{ elt }} </p>
   {% endfor %}
 </table>

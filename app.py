@@ -1,11 +1,9 @@
 # Siddharth Agarwal
 # 1001577570
 # CSE 6331
-# Assignment 1
+# Assignment 2
 # references:
-# -https://www.tutorialspoint.com/sqlite/sqlite_insert_query.htm
-# -https://stackoverflow.com/questions/44926465/upload-image-in-flask
-# -http://flask.pocoo.org/docs/0.12/patterns/fileuploads/
+
 
 import os
 import sqlite3
@@ -24,10 +22,39 @@ allowedExtensions = set(['png', 'jpg', 'jpeg', 'gif'])
 app.config['uploadFolder'] = uploadFolder
 # photos = UploadSet('photos', IMAGES)
 # api = Api(app)
-
+db = "earthquake.db"
 def allowed_file(fname):
     return '.' in fname and \
     fname.rsplit('.', 1)[1].lower() in allowedExtensions
+
+# Search for and count all earthquakes that occurred with a magnitude greater than 5.0
+@app.route('/search/earthquake/bymagnitude', methods=['GET', 'POST'])
+def searchByMag():
+    if request.method == 'GET':
+        return render_template('magnitude.html')
+    if request.method == 'POST' :
+        if 'lower' not in request.form or 'upper' not in request.form:
+            flash('No range given')
+            return redirect(request.url)
+            # result = ["no photo found, please upload again"]
+            # return jsonify(results=result)
+        else:
+            connection = sqlite3.connect(db)
+            cursor = connection.cursor()
+            lower = request.form['lower']
+            upper = request.form['upper']
+            # print (instructor)
+            # query = "select course,section,room from student where instructor='Kashefi'"
+            query = "SELECT * from  earthquake_data where mag between ? and ?"
+            # query = "SELECT * from  earthquake_data where mag between{} and {}".format(lower,upper)
+            print(query)
+            # query2 = "SELECT name,picture FROM student where grade=98"
+            cursor.execute(query, (lower, upper))
+            results = cursor.fetchall()
+            connection.close()
+            return render_template('magnitude.html',results=results, size=len(results))
+            # return jsonify(results=results)
+
 
 @app.route('/search/range', methods=['GET', 'POST'])
 def searchRange():
@@ -46,7 +73,7 @@ def searchRange():
             upper = request.form['upper']
             # print (instructor)
             # query = "select course,section,room from student where instructor='Kashefi'"
-            query = "select * from student where course >"+"'"+lower +"'" + "and course < " +"'"+upper +"'"
+            query = "select * from student where course >"+lower  + "and course < " +upper
             # query2 = "SELECT name,picture FROM student where grade=98"
             cursor.execute(query)
             results = cursor.fetchall()
@@ -77,6 +104,7 @@ def searchDetail():
             connection.close()
             return render_template('detail.html',results=results)
             # return jsonify(results=results)
+
 @app.route('/search/instructor', methods=['GET', 'POST'])
 def searchInstructor():
     if request.method == 'GET':
@@ -103,9 +131,9 @@ def searchInstructor():
 def greeting():
     return render_template('greeting.html')
 
-@app.route('/')
-def home():
-    return render_template('uploadcsv.html')
+# @app.route('/')
+# def home():
+#     return render_template('uploadcsv.html')
 
 @app.route('/uploadpicbyname', methods=['GET', 'POST'])
 def uploadpic():
@@ -135,36 +163,51 @@ def uploadpic():
             photo.save(os.path.join(app.config['uploadFolder'], filename))
             return redirect(url_for('uploaded_file',
                                     filename=filename))
+
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['uploadFolder'],
                                filename)
+
 @app.route('/api/createcsv', methods=['GET', 'POST'])
 def csv():
-    connection = sqlite3.connect("people.db")
+    db = "earthquake.db"
+    connection = sqlite3.connect(db)
     cursor = connection.cursor()
 
+    table_name = "earthquake_data"
     if request.method == 'POST':
         if 'csv' not in request.files:
             result = ["no file found, please upload again"]
             return jsonify(results=result)
         else:
-            table_name = "student"
             file = request.files['csv']
             df = pandas.read_csv(file.stream)
             df.to_sql(table_name, connection, if_exists='append', index=False)
 
-            return jsonify(results=df.to_json())
+            query = "SELECT * FROM " + table_name
+            # # query2 = "SELECT name,picture FROM student where grade=98"
+            cursor.execute(query)
+            results = cursor.fetchall()
+            connection.close()
+            return render_template('displaydbdata.html', data = results, size=len(results))
+            # return jsonify(results=df.to_json())
 
     if request.method == 'GET':
-        query = "SELECT * FROM student"
-        # query2 = "SELECT name,picture FROM student where grade=98"
-        cursor.execute(query)
+        queryTable = "SELECT name FROM sqlite_master WHERE type='table' AND name="+"'"+table_name+"'"
+        cursor.execute(queryTable)
         results = cursor.fetchall()
-        connection.close()
-        # print(len(results))
-        return render_template('displaydbdata.html', students = results, size=len(results))
-
+        # print(results)
+        for item in results:
+            if table_name in item:
+                # return jsonify(table=results)
+                query = "SELECT * FROM " + table_name
+                # # query2 = "SELECT name,picture FROM student where grade=98"
+                cursor.execute(query)
+                results = cursor.fetchall()
+                connection.close()
+                return render_template('displaydbdata.html', data = results, size=len(results))
+        return render_template('displaydbdata.html')
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=int(port))

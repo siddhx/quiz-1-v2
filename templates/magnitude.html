@@ -1,0 +1,37 @@
+<!-- # Siddharth Agarwal
+# 1001577570
+# CSE 6331
+# Assignment 1
+# Design considerations -
+# references: -->
+<html>
+<body>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+      var messages = {{ messages | safe }};
+      for (var i=0; i<messages.length; i++) {
+        alert(messages[i]);
+      }
+    </script>
+  {% endif %}
+{% endwith %}
+
+ <h1>Siddharth Agarwal</h1>
+ <h1>7570</h1>
+<form action = "{{ url_for('searchByMag') }}" method = "POST"
+   enctype = "multipart/form-data">
+   enter lower earthquake magnitude
+   <input type = "text" name = "lower" />
+   enter upper earthquake magnitude
+   <input type = "text" name = "upper" />
+   <input type = "submit"/>
+    <h1>size of data {{size}} rows </h1> 
+   <table>
+     {% for elt in results %}
+         <p>{{ elt }} </p>
+     {% endfor %}
+   </table>
+</form>
+</body>
+</html>
