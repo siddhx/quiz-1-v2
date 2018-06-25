@@ -1,0 +1,45 @@
+@app.route('/search/earthquake/withindistance', methods=['GET', 'POST'])
+def searchByDistance():
+    if request.method == 'GET':
+        return render_template('distance.html')
+    if request.method == 'POST' :
+
+        df = pd.read_csv('./edata.csv')
+        latitude = float(request.form['latitude'])
+        longitude = float(request.form['longitude'])
+        distance = float(request.form['distance'])
+
+        # lower = request.form['lower']
+        # upper = request.form['upper']
+        # query = "select course,section,room from student where instructor='Kashefi'"
+    # if request.form != '' and request.form !='':
+        # lowerDate = request.form['lowerDate']
+        # upperDate = request.form['upperDate']
+        connection = sqlite3.connect(db)
+        cursor = connection.cursor()
+        query = "SELECT * FROM earthquake_data WHERE latitude between ? and ? and longitude between ? and ? ";
+        cursor.execute(query, (latitude - distance, latitude + distance, longitude + distance, longitude + distance))
+        # print(query)
+        results = cursor.fetchall()
+        connection.close()
+            # return render_template('magnitude.html',results=results, size=len(results))
+        # miles = 6.21371*(distance)
+        # distance = 0.01*miles
+        # point = [latitude,longitude]
+        # points = {}
+        # for row in df.itertuples():
+        # # for index, row in df.iterrows():
+        #     points.update({(row.latitude, row.longitude): [row.time, row.mag, row.place ] })
+        #
+        # quakes_kdtree = cKDTree([*points.keys()])
+        #
+        # distances, indices = quakes_kdtree.query(point,k=5000, distance_upper_bound=distance)
+        #
+        # nearby_earthquakes_coordinates = []
+        # for index, max_points in zip(indices.tolist(),distances):
+        #     if max_points == inf:
+        #         break
+        #     nearby_earthquakes_coordinates.append([*points.keys()][index])
+        # results = [points[x] for x in nearby_earthquakes_coordinates]
+        return render_template('distance.html',results=results, size=len(results))
+        # else:

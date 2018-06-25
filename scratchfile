@@ -1,0 +1,32 @@
+"""
+Load quake data from ``filename``, a pickled dict whose keys are
+coordinates in Portland where quakes occurred and whose values are
+lists of dicts containing quake data.
+Send the coordinates into a :class:`scipy.spatial.cKDTree` instance
+so we can perform nearest-neighbor queries for quake data.
+"""
+quakes = quake_db['quakes']
+header = quake_db['header']
+points = quakes.keys()
+quake_kdtree = cKDTree(points)
+
+def get_points_nearby( point, max_points=250):
+    """
+    Find the nearest points within 1/2 a mile of the tuple ``point``, to a
+    maximum of ``max_points``.
+    """
+    # Find quakes within approximately 1/2 a mile. 1/4 mile is .005,
+    # 1/2 mile is .01, full mile is .02.
+    distances, indices = quake_kdtree.query(point, k=max_points,
+                                                 distance_upper_bound=0.01)
+    point_neighbors = []
+    for index, max_points in zip(indices, distances):
+        if max_points == inf:
+            break
+        point_neighbors.append(points[index])
+
+    return point_neighbors
+
+# SELECT * FROM(
+#     SELECT *,(((acos(sin((@latitude*pi()/180)) * sin((Latitude*pi()/180))+cos((@latitude*pi()/180)) * cos((Latitude*pi()/180)) * cos(((@longitude - Longitude)*pi()/180))))*180/pi())*60*1.1515*1.609344) as distance FROM Distances) t
+# WHERE distance <= @distance

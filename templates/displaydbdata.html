@@ -1,11 +1,18 @@
+# Siddharth Agarwal
+# 1001577570
+# CSE 6331
+# Assignment 2
+
 <!DOCTYPE html>
 <html>
 <body>
+  <h1>Siddharth Agarwal</h1>
+  <h1>7570</h1>
   <!-- <form action = "http://quiz1.mybluemix.net/api/createcsv" method = "POST"
       enctype = "multipart/form-data">
       <input type = "file" name = "csv" />
       <input type = "submit"/> -->
-  <form action = "http://127.0.0.1:5000/api/createcsv" method = "POST"
+  <form action = "{{ url_for('csv') }}" method = "POST"
      enctype = "multipart/form-data">
      <input type = "file" name = "csv" />
      <input type = "submit"/>

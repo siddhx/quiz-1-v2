@@ -2,4 +2,4 @@
 applications:
 - name: sample-python-flask
   random-route: true
-  memory: 128M
+  memory: 256M

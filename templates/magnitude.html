@@ -1,9 +1,8 @@
 <!-- # Siddharth Agarwal
 # 1001577570
 # CSE 6331
-# Assignment 1
-# Design considerations -
-# references: -->
+# Assignment 2
+ -->
 <html>
 <body>
 {% with messages = get_flashed_messages() %}
@@ -21,12 +20,17 @@
  <h1>7570</h1>
 <form action = "{{ url_for('searchByMag') }}" method = "POST"
    enctype = "multipart/form-data">
-   enter lower earthquake magnitude
+   lower earthquake magnitude
    <input type = "text" name = "lower" />
-   enter upper earthquake magnitude
+   upper earthquake magnitude
    <input type = "text" name = "upper" />
+   <br>
+   lower date range
+   <input type = "text" name = "lowerDate" />
+   upper date range
+   <input type = "text" name = "upperDate" />
    <input type = "submit"/>
-    <h1>size of data {{size}} rows </h1> 
+    <h1>size of data {{size}} rows </h1>
    <table>
      {% for elt in results %}
          <p>{{ elt }} </p>

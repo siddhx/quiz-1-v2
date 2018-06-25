@@ -1,0 +1,41 @@
+<!-- # Siddharth Agarwal
+# 1001577570
+# CSE 6331
+# Assignment 2 -->
+<html>
+<body>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+      var messages = {{ messages | safe }};
+      for (var i=0; i<messages.length; i++) {
+        alert(messages[i]);
+      }
+    </script>
+  {% endif %}
+{% endwith %}
+
+ <h1>Siddharth Agarwal</h1>
+ <h1>7570</h1>
+<form action = "{{ url_for('searchByDistance') }}" method = "POST"
+   enctype = "multipart/form-data">
+   latitude
+   <!-- <input type = "text" name = "latitude" /> -->
+   <input type="number" step="any" name = "latitude"/>
+
+   longitude
+   <!-- <input type = "text" name = "longitude" /> -->
+   <input type="number" step="any" name = "longitude" />
+   distance
+   <input type="number" step="any" name = "distance" />
+   <br>
+   <input type = "submit"/>
+    <h1>size of data {{size}} rows </h1>
+   <table>
+     {% for elt in results %}
+         <p>{{ elt }} </p>
+     {% endfor %}
+   </table>
+</form>
+</body>
+</html>
