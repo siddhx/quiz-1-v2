@@ -11,3 +11,9 @@ health_check:
   timeout_sec: 4
   unhealthy_threshold: 2
   healthy_threshold: 2
+
+handlers:
+- url: /static
+  static_dir: static
+- url: /.*
+  script: main.app
